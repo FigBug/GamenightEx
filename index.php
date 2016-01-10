@@ -27,12 +27,14 @@ $sql = "select date,number,name,owner,gameid from games order by date asc, numbe
 $q = $db->query($sql);
 
 echo "<table border=1>";
-echo "<tr><th>#<th>Date<th>#<th>Game<th>Owner<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score";
+echo "<tr><th>#<th>Date<th>Day<th>#<th>E<th>Game<th>Owner<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score<th>Player<th>Score";
 
 $idx = 1;
 while ($q->fetchInto($r1))
 {
-  echo "<tr><td>$idx<td>$r1[0]<td>$r1[1]<td><a href=\"game.php?name=$r1[2]\">$r1[2]</a><td>$r1[3]";
+  $day = date("D", strtotime($r1[0]));
+  echo "<tr><td>$idx<td>$r1[0]<td>$day<td>$r1[1]<td><a href=\"edit.php?gameid=$r1[4]\">E</a>";
+  echo "<td><a href=\"game.php?name=$r1[2]\">$r1[2]</a><td>$r1[3]";
   $idx++;
 
   $gameid = $r1[4];

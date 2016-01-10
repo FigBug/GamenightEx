@@ -6,8 +6,19 @@
 
 <form action="doit.php" method="post">
 
+<?
+
+$ts = time();
+
+if (date('H') <= 12)
+  $ts -= 86400;
+
+$date = date('Y-m-d', $ts);
+
+?>
+
 <table border=0>
-<tr><td>Date:<td><input type=date name=date value=<?php echo date('Y-m-d'); ?>>
+<tr><td>Date:<td><input type=date name=date value=<? echo $date; ?>>
 <tr><td>Game:<td><input type=text name=game>
 <tr><td>Owner:<td><input type=text name=owner>
 <tr><td>Number:<td><input type=text name=number value=1 size=4>
