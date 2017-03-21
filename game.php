@@ -21,9 +21,14 @@ $name = mysql_real_escape_string($name);
 
 echo "<h3>Times Played: " . getNum($db, "select count(*) as num from games where name = '$name'") . "</h3>";
 
+echo "<a href=\"http://figbug.com/games/gamehistory.php?game=$name\">";
+echo "<img src=\"http://figbug.com/games/graphs/gameelo.php?game=$name\" width=433 height=250></a>";
+
 doTable("Plays", $db, "select scores.name,count(*) as num from scores inner join games on games.gameid = scores.gameid where games.name = '$name' group by scores.name order by num desc");
 doTable("Wins", $db, "select scores.name,count(*) as num from games inner join scores on games.gameid = scores.gameid where games.name='$name' and scores.position=1 group by scores.name order by num desc");
 doTable("Win %", $db, "SELECT name, w / p * 100 AS win_pct FROM (SELECT scores.name, count(*) w FROM scores inner join games on games.gameid = scores.gameid WHERE position=1 and games.name = '$name' GROUP BY scores.name) AS wins JOIN (SELECT scores.name, count(*) p FROM scores inner join games on games.gameid = scores.gameid where games.name = '$name' GROUP BY scores.name) AS plays USING (name) ORDER BY win_pct DESC");
+doTableArray("ELO", calcGameELOs($db, $name));
+
 echo "<p>";
 
 $sql = "select date,number,name,owner,gameid from games where name='$name'  order by date asc, number asc";

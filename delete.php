@@ -22,6 +22,7 @@ $sql = "delete from scores where gameid=$gid";
 $db->query($sql);
 
 calcAllELOs($db);
+calcAllELOs1($db);
 ?>
 
 Game Deleted! (I hope)

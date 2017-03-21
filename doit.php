@@ -55,6 +55,7 @@ foreach ($names as $n)
   $eloS[] = getELO($db, $n);
 
 calcAllELOs($db);
+calcAllELOs1($db);
 
 foreach ($names as $n)
   $eloE[] = getELO($db, $n);

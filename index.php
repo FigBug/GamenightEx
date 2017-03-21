@@ -7,6 +7,7 @@
 <a href="addresult.php">Add Result</a> |
 <a href="predict.php">Predict</a> |
 <a href="history.php">History</a> |
+<a href="history1.php">History (1st game only)</a> |
 <a href="stats.php">Stats</a> |
 <a href="stats1.php">Stats (1st game only)</a> |
 <a href="percentage.php">Expected</a> |
@@ -23,7 +24,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 $db = DB::connect("mysql://games:games@localhost/games");
 
-$sql = "select date,number,name,owner,gameid from games order by date asc, number asc";
+$sql = "select date,number,name,owner,gameid from games order by date desc, number desc";
 $q = $db->query($sql);
 
 echo "<table border=1>";
@@ -34,7 +35,7 @@ while ($q->fetchInto($r1))
 {
   $day = date("D", strtotime($r1[0]));
   echo "<tr><td>$idx<td>$r1[0]<td>$day<td>$r1[1]<td><a href=\"edit.php?gameid=$r1[4]\">E</a>";
-  echo "<td><a href=\"game.php?name=$r1[2]\">$r1[2]</a><td>$r1[3]";
+  echo "<td><a href=\"game.php?name=" . urlencode("$r1[2]") . "\">$r1[2]</a><td>$r1[3]";
   $idx++;
 
   $gameid = $r1[4];

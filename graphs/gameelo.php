@@ -7,9 +7,9 @@ require "../color.php";
 function drawChart($title, $DataSet, $names, $colors, $legend = false)
 {
   // Initialise the graph
-  $Chart = new pChart(2000,750);
+  $Chart = new pChart(1300,750);
   $Chart->setFontProperties("Fonts/tahoma.ttf",8);
-  $Chart->setGraphArea(50,25,1900,725);
+  $Chart->setGraphArea(50,25,1200,725);
   $Chart->drawGraphArea(255,255,255,TRUE);
   $Chart->drawXYScale($DataSet->GetData(),$DataSet->GetDataDescription(),"ally","allx",150,150,150,TRUE,45);
   $Chart->setLineStyle(4);
@@ -41,7 +41,11 @@ require('DB.php');
 
 $db = DB::connect("mysql://roland:68volvo@localhost/games");
 
-$sql = "select name from scores group by name having count(*) > 10";
+$game = $_GET['game'];
+$game = mysql_real_escape_string($game);
+
+
+$sql = "select scores.name from scores inner join games on games.gameid=scores.gameid where games.name='$game' group by scores.name having count(*) >= 2";
 
 $q = $db->query($sql);
 
@@ -51,7 +55,7 @@ while ($q->fetchInto($row))
 
 sort($names);
 
-$sql = "select games.date, games.gameid, scores.name, elo.elo from elo inner join games on games.gameid = elo.gameid inner join scores on games.gameid = scores.gameid where elo.name in (select name from scores group by name having count(*) > 10) and scores.name = elo.name order by games.date, games.number asc";
+$sql = "select games.date, games.gameid, scores.name, elo.elo from elo inner join games on games.gameid = elo.gameid inner join scores on games.gameid = scores.gameid where elo.name in (select scores.name from scores inner join games on games.gameid=scores.gameid where games.name='$game' group by scores.name having count(*) >= 2) and scores.name = elo.name and games.name='$game' order by games.date, games.number asc";
 
 $q = $db->query($sql);
 

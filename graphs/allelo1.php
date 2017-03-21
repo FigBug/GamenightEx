@@ -41,7 +41,7 @@ require('DB.php');
 
 $db = DB::connect("mysql://roland:68volvo@localhost/games");
 
-$sql = "select name from scores group by name having count(*) > 10";
+$sql = "select scores.name from scores inner join games on games.gameid = scores.gameid where games.number = 1 group by scores.name having count(*) > 10";
 
 $q = $db->query($sql);
 
@@ -51,7 +51,7 @@ while ($q->fetchInto($row))
 
 sort($names);
 
-$sql = "select games.date, games.gameid, scores.name, elo.elo from elo inner join games on games.gameid = elo.gameid inner join scores on games.gameid = scores.gameid where elo.name in (select name from scores group by name having count(*) > 10) and scores.name = elo.name order by games.date, games.number asc";
+$sql = "select games.date, games.gameid, scores.name, elo1.elo from elo1 inner join games on games.gameid = elo1.gameid inner join scores on games.gameid = scores.gameid where elo1.name in (select name from scores group by name having count(*) > 10) and scores.name = elo1.name order by games.date, games.number asc";
 
 $q = $db->query($sql);
 

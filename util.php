@@ -35,6 +35,47 @@ function doTable($title, $db, $sql)
   echo "</table>"; 
 }
 
+function doTableArray($title, $values)
+{
+  echo "<h3>$title</h3>";
+  echo "<table border=1>";
+
+  foreach ($values as $key => $val)
+  {
+    echo "<tr><td>$key<td>$val";
+  }
+  echo "</table>"; 
+}
+
+function doTableDiff($title, $db, $sql)
+{
+  echo "<h3>$title</h3>";
+  echo "<table border=1>";
+
+  $q = $db->query($sql);
+
+  $lastVal = 0;
+  $first = true;
+  while ($q->fetchInto($r))
+  {
+    if (!$first)
+    {
+	  echo "<tr>";
+	  echo "<td>$r[0]<td>$r[1]<td>" . ordSuffix($r[2]) . "<td>$r[3]";
+    }
+    $val = $r[3];
+    if (!$first)
+    {
+      $diff = ($val - $lastVal);
+      if ($diff > 0) $diff = "+" . $diff;
+      echo "<td>" . $diff;
+    }
+    $lastVal = $val;
+    $first = false;
+  }
+  echo "</table>"; 
+}
+
 function doPositionTable($title, $db, $sql)
 {
   echo "<h3>$title</h3>";
@@ -86,9 +127,33 @@ function getAllGameIDs($db)
   return $res;
 }
 
+function getAllGameIDs1($db)
+{
+  $sql = "select gameid from games where games.number = 1 order by date asc, number asc";
+  $q = $db->query($sql);
+
+  $res = array();
+
+  while ($q->fetchInto($r))
+    $res[] = $r[0];
+
+  return $res;
+}
+
 function getELO($db, $name)
 {
   $sql = "select elo from elo where name = '$name' order by eloid desc limit 1";
+  $q = $db->query($sql);
+
+  if ($q->fetchInto($row))
+    return $row[0];
+  else
+    return 1500;
+}
+
+function getELO1($db, $name)
+{
+  $sql = "select elo from elo1 where name = '$name' order by eloid desc limit 1";
   $q = $db->query($sql);
 
   if ($q->fetchInto($row))
@@ -132,6 +197,125 @@ function calcAllELOs($db)
       $db->query($sql);
     }
   }
+}
+
+function calcAllELOs1($db)
+{
+  $sql = "delete from elo1";
+  $db->query($sql);
+
+  $games = getAllGameIDs1($db);
+
+  foreach ($games as $gameid)
+  {
+    $sql = "select name,position from scores where gameid='$gameid'";
+    $q1 = $db->query($sql);
+
+    $names = array();
+    $match = new ELOMatch();
+
+    while ($q1->fetchInto($r1))
+    {
+      $name = $r1[0];
+      $pos  = $r1[1];
+      $elo  = getELO1($db, $name);
+
+      $names[] = $name;
+
+      $match->addPlayer($name, $pos, $elo);
+    }
+
+    $match->calculateELOs();
+
+    foreach ($names as $name) 
+    {
+      $newELO = $match->getELO($name);
+      $sql = "insert into elo1 (gameid,name,elo) values ($gameid, '$name', $newELO)";
+      $db->query($sql);
+    }
+  }
+}
+
+function getGameIDs($db, $name)
+{
+  $sql = "select gameid from games where name='$name' order by date asc, number asc";
+  $q = $db->query($sql);
+
+  $res = array();
+
+  while ($q->fetchInto($r))
+    $res[] = $r[0];
+
+  return $res;
+}
+
+function calcGameELOs($db, $name)
+{
+  $games = getGameIDs($db, $name);
+  $elos = array();
+
+  foreach ($games as $gameid)
+  {
+    $sql = "select name,position from scores where gameid='$gameid'";
+    $q1 = $db->query($sql);
+
+    $names = array();
+    $match = new ELOMatch();
+
+    while ($q1->fetchInto($r1))
+    {
+      $name = $r1[0];
+      $pos  = $r1[1];
+      
+      if (isset($elos[$name]))
+		$elo = $elos[$name];
+	  else
+	    $elo = 1500;
+
+      $names[] = $name;
+
+      $match->addPlayer($name, $pos, $elo);
+    }
+
+    $match->calculateELOs();
+
+    foreach ($names as $name) 
+    {
+      $newELO = $match->getELO($name);
+      $elos[$name] = $newELO;
+    }
+  }
+  arsort($elos);
+  return $elos;
+}
+
+function gamesPlayedByXOrMore($db, $name, $times)
+{
+  $names = array();
+  $sql = "select games.name as num from games inner join scores on games.gameid = scores.gameid where scores.name='$name' group by games.name
+having count(*) >= $times order by num desc";
+
+  $q = $db->query($sql);
+  while ($q->fetchInto($r))
+    $names[] = $r[0];
+ 
+  return $names;
+}
+
+function gamesPlayersELOs($db, $name)
+{
+  $elos = array();
+  
+  $games = gamesPlayedByXOrMore($db, $name, 3);
+  
+  foreach ($games as $game)
+  {
+    $player_elos = calcGameELOs($db, $game);
+    
+    $elos[$game] = $player_elos[$name];
+  }
+  arsort($elos);
+  return $elos;
 }
 
 function rgbToHsl( $r, $g, $b ) {
