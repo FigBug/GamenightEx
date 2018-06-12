@@ -11,7 +11,7 @@ require "util.php";
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-$db = DB::connect("mysql://games:games@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $sql = "select distinct name from scores order by name asc";
 $q = $db->query($sql);

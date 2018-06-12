@@ -11,7 +11,7 @@
 require "DB.php";
 require "util.php";
 
-$db = DB::connect("mysql://games:games@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $ts = time();
 

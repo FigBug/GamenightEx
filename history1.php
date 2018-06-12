@@ -45,7 +45,7 @@ require "util.php";
         return round($dR).",".round($dG).",".round($dB);
     }
 
-$db = DB::connect("mysql://games:games@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $sql = "select scores.name from scores inner join games on games.gameid = scores.gameid where games.number = 1 group by scores.name having count(*) > 10";
 

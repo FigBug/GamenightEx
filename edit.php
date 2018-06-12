@@ -8,7 +8,7 @@
 require "DB.php";
 require "util.php";
 
-$db = DB::connect("mysql://games:games@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $gid = mysql_real_escape_string($_GET["gameid"]);
 

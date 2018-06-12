@@ -22,7 +22,7 @@ require "DB.php";
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-$db = DB::connect("mysql://games:games@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $sql = "select date,number,name,owner,gameid from games order by date desc, number desc";
 $q = $db->query($sql);

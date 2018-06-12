@@ -45,7 +45,7 @@ require "util.php";
         return round($dR).",".round($dG).",".round($dB);
     }
 
-$db = DB::connect("mysql://games:games@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 $game = $_GET['game'];
 $game = mysql_real_escape_string($game);
 

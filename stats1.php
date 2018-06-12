@@ -9,7 +9,7 @@
 require "DB.php";
 require "util.php";
 
-$db = DB::connect("mysql://games:games@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $sql = "select scores.name,count(*) as num from scores inner join games on games.gameid = scores.gameid where number = 1 group by scores.name order by num desc";
 doTable("# Games Played", $db, $sql);
