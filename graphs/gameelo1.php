@@ -39,7 +39,7 @@ $title = "ELO";
 
 require('DB.php');
 
-$db = DB::connect("mysql://roland:68volvo@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $game = $_GET['game'];
 $game = mysql_real_escape_string($game);

@@ -15,7 +15,7 @@ require('graphfunc.php');
 $name = $_GET['name'];
 preg_replace("/[^A-Za-z0-9 ]/", '', $name);
 
-$db = DB::connect("mysql://roland:68volvo@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $sql = "select games.date, elo1.elo from elo1 inner join games on games.gameid = elo1.gameid where elo1.name = '$name' and games.number = 1 order by elo1.eloid asc";
 

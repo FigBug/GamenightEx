@@ -39,7 +39,7 @@ $title = "ELO";
 
 require('DB.php');
 
-$db = DB::connect("mysql://roland:68volvo@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $sql = "select scores.name from scores inner join games on games.gameid = scores.gameid where games.number = 1 group by scores.name having count(*) > 10";
 

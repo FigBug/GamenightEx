@@ -10,7 +10,7 @@ require "util.php";
 
 $db = DB::connect("mysqli://games:games@localhost/games");
 
-$gid = mysql_real_escape_string($_GET["gameid"]);
+$gid = $db->escapeSimple($_GET["gameid"]);
 
 $sql = "select date,number,name,owner,club from games where gameid=$gid";
 $q = $db->query($sql);

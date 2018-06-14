@@ -13,11 +13,11 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 $db = DB::connect("mysqli://games:games@localhost/games");
 
-$date = mysql_real_escape_string($_POST["date"]);
-$game = mysql_real_escape_string($_POST["game"]);
-$owner = mysql_real_escape_string($_POST["owner"]);
-$number = mysql_real_escape_string($_POST["number"]);
-$club = mysql_real_escape_string($_POST["club"]);
+$date = $db->escapeSimple($_POST["date"]);
+$game = $db->escapeSimple($_POST["game"]);
+$owner = $db->escapeSimple($_POST["owner"]);
+$number = $db->escapeSimple($_POST["number"]);
+$club = $db->escapeSimple($_POST["club"]);
 
 $sql = "insert into games (date, number, name, owner, club) values ('$date', $number, '$game', '$owner', '$club')";
 $db->query($sql);
@@ -35,9 +35,9 @@ if ($q->fetchInto($r))
   {
     if (isset($_POST["name" . $i]) && $_POST["name" . $i] != "")
     {
-      $name = mysql_real_escape_string($_POST["name" . $i]);
-      $place = mysql_real_escape_string($_POST["place" . $i]);
-      $score = mysql_real_escape_string($_POST["score" . $i]);
+      $name = $db->escapeSimple($_POST["name" . $i]);
+      $place = $db->escapeSimple($_POST["place" . $i]);
+      $score = $db->escapeSimple($_POST["score" . $i]);
 
       $sql = "insert into scores (gameid, position, name, points) values ($gameid, $place, '$name', $score)";
 

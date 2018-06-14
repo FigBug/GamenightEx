@@ -13,7 +13,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 $db = DB::connect("mysqli://games:games@localhost/games");
 
-$gid = mysql_real_escape_string($_GET["gameid"]);
+$gid = $db->escapeSimple($_GET["gameid"]);
 
 $sql = "delete from games where gameid=$gid";
 $db->query($sql);

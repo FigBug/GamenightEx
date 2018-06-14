@@ -14,7 +14,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 $db = DB::connect("mysqli://games:games@localhost/games");
 
 $name = $_GET['name'];
-$name = mysql_real_escape_string($name);
+$name = $db->escapeSimple($name);
 
 echo "<h1>$name</h1>";
 

@@ -17,7 +17,7 @@ $name = $_GET['name'];
 
 echo "<h1>$name</h1>";
 
-$name = mysql_real_escape_string($name);
+$name = $db->escapeSimple($name);
 
 echo "<h3>Times Played: " . getNum($db, "select count(*) as num from games where name = '$name'") . "</h3>";
 

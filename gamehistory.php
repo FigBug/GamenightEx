@@ -47,7 +47,7 @@ require "util.php";
 
 $db = DB::connect("mysqli://games:games@localhost/games");
 $game = $_GET['game'];
-$game = mysql_real_escape_string($game);
+$game = $db->escapeSimple($game);
 
 $sql = "select scores.name from scores inner join games on games.gameid=scores.gameid where games.name='$game' group by scores.name having count(*) >= 2";
 

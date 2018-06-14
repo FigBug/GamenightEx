@@ -39,7 +39,7 @@ $title = "ELO";
 
 require('DB.php');
 
-$db = DB::connect("mysql://roland:68volvo@localhost/games");
+$db = DB::connect("mysqli://games:games@localhost/games");
 
 $sql = "select name from scores group by name having count(*) > 10";
 
