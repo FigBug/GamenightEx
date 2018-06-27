@@ -18,6 +18,7 @@ $sql = "select s1.name as n1,s2.name as n2, count(*) as num from scores as s1 jo
 doTable("Top Pairings", $db, $sql);
 
 $sql = "select name, elo from (select * from elo1 order by `name`, eloid desc) x group by `name` order by elo desc";
+$sql = "select name, elo from elo1 join (select max(eloid) maxid from elo1 group by name) x on maxid=eloid order by elo desc";
 doTable("ELO", $db, $sql);
 
 $sql = "select scores.name,count(*) as num from scores inner join games on games.gameid = scores.gameid where number = 1 and position=1 group by scores.name order by num desc";
