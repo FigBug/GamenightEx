@@ -12,6 +12,7 @@ require "util.php";
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 $db = DB::connect("mysqli://games:games@localhost/games");
+$db->autocommit(false);
 
 $gid = $db->escapeSimple($_GET["gameid"]);
 
@@ -20,6 +21,9 @@ $db->query($sql);
 
 $sql = "delete from scores where gameid=$gid";
 $db->query($sql);
+
+$db->query("commit");
+$db->autocommit(true);
 
 calcAllELOs($db);
 calcAllELOs1($db);

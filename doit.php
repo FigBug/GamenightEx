@@ -12,6 +12,7 @@ require "util.php";
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 $db = DB::connect("mysqli://games:games@localhost/games");
+$db->autocommit(false);
 
 $date = $db->escapeSimple($_POST["date"]);
 $game = $db->escapeSimple($_POST["game"]);
@@ -47,6 +48,9 @@ if ($q->fetchInto($r))
     }
   }
 }
+
+$db->query("commit");
+$db->autocommit(true);
 
 $eloS = array();
 $eloE = array();

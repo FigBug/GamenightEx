@@ -164,6 +164,8 @@ function getELO1($db, $name)
 
 function calcAllELOs($db)
 {
+  $db->autocommit(false);
+
   $sql = "delete from elo";
   $db->query($sql);
 
@@ -197,10 +199,16 @@ function calcAllELOs($db)
       $db->query($sql);
     }
   }
+  
+  $db->query("commit");
+  $db->autocommit(true);
+
 }
 
 function calcAllELOs1($db)
 {
+  $db->autocommit(false);
+
   $sql = "delete from elo1";
   $db->query($sql);
 
@@ -234,6 +242,8 @@ function calcAllELOs1($db)
       $db->query($sql);
     }
   }
+  $db->query("commit");
+  $db->autocommit(true);
 }
 
 function getGameIDs($db, $name)
