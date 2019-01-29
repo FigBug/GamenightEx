@@ -51,7 +51,8 @@ while ($q->fetchInto($row))
 
 sort($names);
 
-$sql = "select games.date, games.gameid, scores.name, elo.elo from elo inner join games on games.gameid = elo.gameid inner join scores on games.gameid = scores.gameid where elo.name in (select name from scores group by name having count(*) > 10) and scores.name = elo.name order by games.date, games.number asc";
+//$sql = "select games.date, games.gameid, scores.name, elo.elo from elo inner join games on games.gameid = elo.gameid inner join scores on games.gameid = scores.gameid where elo.name in (select name from scores group by name having count(*) > 10) and scores.name = elo.name order by games.date, games.number asc";
+$sql = "select games.date, games.gameid, elo.name, elo.elo from elo inner join games on games.gameid = elo.gameid order by games.date, games.number asc";
 
 $q = $db->query($sql);
 
@@ -74,6 +75,9 @@ while ($q->fetchInto($row)) {
   $gameid = $row[1];
   $player = $row[2];
   $elo = $row[3];
+  
+  if (!in_array($player, $names))
+    continue;
 
   if ($gameid != $lastid) {
     $lastid = $gameid;
